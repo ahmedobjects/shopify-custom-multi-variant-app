@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/login_shopify', 'InstallAppController@appLoginPreInstall');
+Route::get('/generate_token', 'InstallAppController@generateToken');
+
+Route::group(['middleware' => ['auth']], function () { 
+    Route::get('/home', function () {
+        return view('home');
+    });
+    
+    Route::get('/uninstall_app', 'InstallAppController@unInstallApp');
+
+});
+
+
