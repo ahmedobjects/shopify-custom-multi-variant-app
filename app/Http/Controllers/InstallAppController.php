@@ -14,8 +14,6 @@ class InstallAppController extends Controller
 {
     public $api_key;
     public $api_secret_key;
-    public $store;
-    public $access_token;
 
     public function __construct() {
         $this->api_key = env('SHOPIFY_API_KEY');
@@ -51,8 +49,6 @@ class InstallAppController extends Controller
             }
 
             Auth::login($user);
-            // Auth::logout();
-            // return redirect("/home");
             if(auth()->user()){
                 $config = array(
                     'ShopUrl' => getStoreFullUrl($user->name),
