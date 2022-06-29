@@ -30,6 +30,9 @@ class InstallAppController extends Controller
 
         $redirect_uri = env('SHOPIFY_APP_URI')."/generate_token"; //replace  ngrok url for your domain
         $install_url = "https://".$shop. "/admin/oauth/authorize?client_id=".$this->api_key."&scope=".$scopes."&redirect_uri=".urlencode($redirect_uri);
+        if(empty($install_url)){
+            return redirect("/");
+        }
         return redirect($install_url);
     }
 

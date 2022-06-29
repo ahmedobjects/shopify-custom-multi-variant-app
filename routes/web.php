@@ -16,33 +16,50 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
+Auth::routes();
 
 
 Route::get('/login_shopify', 'InstallAppController@appLoginPreInstall');
 Route::get('/generate_token', 'InstallAppController@generateToken');
 
+Route::group(['middleware' => 'auth'], function()
+{
+    Route::get('/home', 'HomeController@index')->name('home');
+    // Route::get('/uninstall_app', 'InstallAppController@unInstallApp');
+    Route::group(['prefix'=> 'script-tag'], function(){
+        Route::post('/', 'ScriptTagController@store')->name('script-tag.store');
+        Route::delete('/{id}', 'ScriptTagController@destroy')->name('script-tag.destroy');
+    
+        Route::get('/url', 'ScriptTagController@scriptUrl')->name('script-tag.url');
+    
+    });
+
+    Route::group(['prefix'=> 'app-config'], function(){
+        Route::post('/activity/{id}', 'AppConfigController@toggleActivity')->name('app-config.activity');
+    
+    });
+});
+
 // Route::group(['middleware' => ['auth']], function () { 
-Route::get('/home', 'AppHomeController@index');
+// Route::get('/home', 'AppHomeController@index');
 
-Route::get('/uninstall_app', 'InstallAppController@unInstallApp');
 
-Route::group(['prefix'=> 'script-tag'], function(){
-    Route::post('/', 'ScriptTagController@store')->name('script-tag.store');
-    Route::delete('/{id}', 'ScriptTagController@destroy')->name('script-tag.destroy');
+// Route::group(['prefix'=> 'script-tag'], function(){
+//     Route::post('/', 'ScriptTagController@store')->name('script-tag.store');
+//     Route::delete('/{id}', 'ScriptTagController@destroy')->name('script-tag.destroy');
 
-    Route::get('/url', 'ScriptTagController@scriptUrl')->name('script-tag.url');
+//     Route::get('/url', 'ScriptTagController@scriptUrl')->name('script-tag.url');
 
-});
+// });
 
-Route::group(['prefix'=> 'app-config'], function(){
-    Route::post('/activity/{id}', 'AppConfigController@toggleActivity')->name('app-config.activity');
+// Route::group(['prefix'=> 'app-config'], function(){
+//     Route::post('/activity/{id}', 'AppConfigController@toggleActivity')->name('app-config.activity');
 
-});
+// });
 
 
 Route::get('/product-variants', 'ProductVariantController@index')->name('product-variants.index');
 
-Route::get('/test', function(){
-    echo "test";
-})->name('test');
+// Route::get('/test', function(){
+//     echo "test";
+// })->name('test');
