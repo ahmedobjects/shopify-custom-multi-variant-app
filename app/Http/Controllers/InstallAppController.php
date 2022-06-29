@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // use App\Models\ShopifyStore;
 
+use App\Models\ScriptTag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,24 +38,25 @@ class InstallAppController extends Controller
         $result = $this->sendHttpRequestToGenerateData($data);
 
         if(isset($data['shop']) && $result['access_token']){
-            $user = User::where('email',"shop@".$data['shop'])->where('password', $result['access_token'])->first();
+            $user = User::where('email',"shop@".$data['shop'])->first();
+            if($user && $user->password != $result['access_token']){
+                $user->password = $result['access_token'];
+                $user->save();
+                // delete the script tag
+                ScriptTag::where('user_id',$user->id)->delete();
+            }
 
             if(!$user){
                 $user = new User;
                 $user->name = $data['shop'];
                 $user->email = "shop@".$data['shop'];
                 $user->password = $result['access_token'];
+                $user->store_url = getStoreFullUrl($data['shop']);
                 $user->save();
-
             }
 
             Auth::login($user);
             if(auth()->user()){
-                $config = array(
-                    'ShopUrl' => getStoreFullUrl($user->name),
-                    'AccessToken' => $user->password
-                );
-                $shopify = new ShopifySDK($config);
                 return redirect("/home");
             }
         }

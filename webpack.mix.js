@@ -15,4 +15,6 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/script-tag.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         //
+    ]).postCss('resources/css/custom-multi-variant-style.css', 'public/css', [
+        //
     ]);

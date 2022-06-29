@@ -11,8 +11,7 @@
     </form>
 @endif
 
-<a href="{{ route('script-tag.url') }}">script tag</a>
-
-
-
-@dd("home page")
+<form action="{{ route('app-config.activity', ['id' => $user->id ]) }}" method="post">
+    @csrf
+    <input type="submit" value="{{ isset($user->is_active) && $user->is_active ?  "Inactive" : "Active" }}">
+</form>

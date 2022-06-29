@@ -1,10 +1,5 @@
 <?php
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File as FacadesFile;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Crypt;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,11 +16,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+
+
 Route::get('/login_shopify', 'InstallAppController@appLoginPreInstall');
 Route::get('/generate_token', 'InstallAppController@generateToken');
 
 // Route::group(['middleware' => ['auth']], function () { 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'AppHomeController@index');
 
 Route::get('/uninstall_app', 'InstallAppController@unInstallApp');
 
@@ -37,9 +35,14 @@ Route::group(['prefix'=> 'script-tag'], function(){
 
 });
 
+Route::group(['prefix'=> 'app-config'], function(){
+    Route::post('/activity/{id}', 'AppConfigController@toggleActivity')->name('app-config.activity');
 
-Route::get('/product-variants', function(){
-    // header('Access-Control-Allow-Origin: *');
-
-    return "product variant";
 });
+
+
+Route::get('/product-variants', 'ProductVariantController@index')->name('product-variants.index');
+
+Route::get('/test', function(){
+    echo "test";
+})->name('test');
